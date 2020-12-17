@@ -1,0 +1,15 @@
+*.py[cod]
+
+# editors
+*.swp
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+
+.idea/
+.pydevproject
+.project

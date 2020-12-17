@@ -201,7 +201,12 @@ class RestClient(object):
     def get_storage_pools(self):
         result = self.call("/storagepool", "get")
         self._assert_result(result, 'Get storage pools info error.')
-        return result.get('data', [])
+        datas = result.get('data', [])
+        # from Dorado V6 6.1.RC3, storagepool USAGETYPE use new field NEWUSAGETYPE
+        for data in datas:
+            if 'NEWUSAGETYPE' in data:
+                data['USAGETYPE'] = data['NEWUSAGETYPE']
+        return datas
 
     def get_storage_pool_by_id(self, pool_id):
         url = "/storagepool/%s" % pool_id
