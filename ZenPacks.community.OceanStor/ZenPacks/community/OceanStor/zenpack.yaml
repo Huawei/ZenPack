@@ -39,7 +39,7 @@ classes:
         label: Running Status
       productModeString:
         label: Product Model
-      PRODUCTVERSION:
+      productVersion:
         label: Product Version
       TOTALCAPACITY:
         label: System Capacity
@@ -55,8 +55,6 @@ classes:
     monitoring_templates: [OceanStorEnclosure]
 
     properties:
-      LOCATION:
-        label: Location
       HEALTHSTATUS:
         label: Health Status
       RUNNINGSTATUS:
@@ -74,6 +72,8 @@ classes:
 
   OceanStorPower:
     label: Power
+    monitoring_templates: [OceanStorPower]
+
     properties:
       LOCATION:
         label: Location
@@ -93,6 +93,8 @@ classes:
 
   OceanStorFan:
     label: Fan
+    monitoring_templates: [OceanStorFan]
+
     properties:
       LOCATION:
         label: Location
@@ -105,6 +107,8 @@ classes:
 
   OceanStorBBU:
     label: BBU
+    monitoring_templates: [OceanStorBBU]
+
     properties:
       LOCATION:
         label: Location
@@ -139,6 +143,8 @@ classes:
 
   OceanStorDiskDomain:
     label: Disk Domain
+    monitoring_templates: [OceanStorDiskDomain]
+
     properties:
       HEALTHSTATUS:
         label: Health Status
@@ -155,6 +161,8 @@ classes:
 
   OceanStorDisk:
     label: Disk
+    monitoring_templates: [OceanStorDisk]
+
     properties:
       HEALTHSTATUS:
         label: Health Status
@@ -240,6 +248,8 @@ classes:
 
   OceanStorSnapshot:
     label: LUN Snapshot
+    monitoring_templates: [OceanStorSnapshot]
+
     properties:
       HEALTHSTATUS:
         label: Health Status
@@ -253,12 +263,19 @@ classes:
         label: Activated At
       EXPOSEDTOINITIATOR:
         label: Mapping
+      vstoreName:
+        label: vStore Name
       WWN:
         label: WWN
+        grid_display: false
+      PARENTID:
+        label: LUN ID
         grid_display: false
 
   OceanStorFSSnapshot:
     label: FS Snapshot
+    monitoring_templates: [OceanStorFSSnapshot]
+
     properties:
       HEALTHSTATUS:
         label: Health Status
@@ -266,9 +283,14 @@ classes:
         label: Snapshot Used Capacity
       TIMESTAMP:
         label: Created At
+      PARENTID:
+        label: FileSystem ID
+        grid_display: false
 
   OceanStorNFSShare:
     label: NFS Share
+    monitoring_templates: [OceanStorNFSShare]
+
     properties:
       SHAREPATH:
         label: Share Path
@@ -276,23 +298,38 @@ classes:
         label: Description
       CHARACTERENCODING:
         label: Character Encoding
+      FSID:
+        label: FileSystem ID
+        grid_display: false
 
   OceanStorCIFSShare:
     label: CIFS Share
+    monitoring_templates: [OceanStorCIFSShare]
+
     properties:
       SHAREPATH:
         label: Share Path
       DESCRIPTION:
         label: Description
+      FSID:
+        label: FileSystem ID
+        grid_display: false
 
   OceanStorQuotaTree:
     label: Quota Tree
+    monitoring_templates: [OceanStorQuotaTree]
+
     properties:
       QUOTASWITCH:
         label: Quota Switch
+      PARENTID:
+        label: FileSystem ID
+        grid_display: false
 
   OceanStorEthPort:
     label: Ethernet Port
+    monitoring_templates: [OceanStorEthPort]
+
     properties:
       LOCATION:
         label: Location
@@ -323,6 +360,8 @@ classes:
 
   OceanStorFCPort:
     label: FC Port
+    monitoring_templates: [OceanStorFCPort]
+
     properties:
       LOCATION:
         label: Location
@@ -345,6 +384,8 @@ classes:
 
   OceanStorFCoEPort:
     label: FCoE Port
+    monitoring_templates: [OceanStorFCoEPort]
+
     properties:
       LOCATION:
         label: Location
@@ -365,6 +406,8 @@ classes:
 
   OceanStorBondPort:
     label: Bond Port
+    monitoring_templates: [OceanStorBondPort]
+
     properties:
       HEALTHSTATUS:
         label: Health Status
@@ -377,6 +420,8 @@ classes:
 
   OceanStorVLAN:
     label: VLAN
+    monitoring_templates: [OceanStorVLAN]
+
     properties:
       RUNNINGSTATUS:
         label: Status
@@ -391,6 +436,8 @@ classes:
 
   OceanStorLIF:
     label: Logical Port
+    monitoring_templates: [OceanStorLIF]
+
     properties:
       RUNNINGSTATUS:
         label: Running Status
@@ -417,6 +464,8 @@ classes:
 
   OceanStorHost:
     label: Host
+    monitoring_templates: [OceanStorHost]
+
     properties:
       RUNNINGSTATUS:
         label: Status
@@ -431,6 +480,8 @@ classes:
 
   OceanStorISCSIInitiator:
     label: ISCSI Initiator
+    monitoring_templates: [OceanStorISCSIInitiator]
+
     properties:
       RUNNINGSTATUS:
         label: Status
@@ -447,6 +498,8 @@ classes:
 
   OceanStorFCInitiator:
     label: FC Initiator
+    monitoring_templates: [OceanStorFCInitiator]
+
     properties:
       RUNNINGSTATUS:
         label: Status
@@ -480,10 +533,10 @@ class_relationships:
   - OceanStorDevice 1:MC OceanStorHost
   - OceanStorDevice 1:MC OceanStorISCSIInitiator
   - OceanStorDevice 1:MC OceanStorFCInitiator
+  - OceanStorDevice 1:MC OceanStorNFSShare
+  - OceanStorDevice 1:MC OceanStorCIFSShare
   - OceanStorLUN 1:MC OceanStorSnapshot
   - OceanStorFileSystem 1:MC OceanStorFSSnapshot
-  - OceanStorFileSystem 1:MC OceanStorNFSShare
-  - OceanStorFileSystem 1:MC OceanStorCIFSShare
   - OceanStorFileSystem 1:MC OceanStorQuotaTree
 
 device_classes:
@@ -494,7 +547,29 @@ device_classes:
       zSnmpMonitorIgnore: true
       zPingMonitorIgnore: true
       zCollectorPlugins:
-        - community.api.OceanStor
+        - community.api.OceanStorArray
+        - community.api.OceanStorEnclosure
+        - community.api.OceanStorPower
+        - community.api.OceanStorFan
+        - community.api.OceanStorBBU
+        - community.api.OceanStorController
+        - community.api.OceanStorDiskDomain
+        - community.api.OceanStorDisk
+        - community.api.OceanStorStoragePool
+        - community.api.OceanStorLUN
+        - community.api.OceanStorFileSystem
+        - community.api.OceanStorSnapshot
+        - community.api.OceanStorNFSShare
+        - community.api.OceanStorCIFSShare
+        - community.api.OceanStorEthPort
+        - community.api.OceanStorFCPort
+        - community.api.OceanStorFCoEPort
+        - community.api.OceanStorBondPort
+        - community.api.OceanStorVLAN
+        - community.api.OceanStorLIF
+        - community.api.OceanStorHost
+        - community.api.OceanStorISCSIInitiator
+        - community.api.OceanStorFCInitiator
       zDeviceTemplates:
         - OceanStorEvents
 
@@ -507,259 +582,76 @@ device_classes:
             plugin_classname: ZenPacks.community.OceanStor.dsplugins.Alarms
 
       OceanStorArray:
-        description: "OceanStor array monitoring."
         targetPythonClass: ZenPacks.community.OceanStor.OceanStorArray
-        datasources:
-          array:
-            type: Python
-            plugin_classname: ZenPacks.community.OceanStor.dsplugins.Array
-            datapoints:
-              SYSTEM_CAPACITY_USAGE: {}
-              STORAGE_POOLS_CAPACITY_USAGE: {}
-
-        thresholds:
-          system_capacity_usage:
-            dsnames: [array_SYSTEM_CAPACITY_USAGE]
-            eventClass: /Status
-            maxval: "80"
-          storage_pools_capacity_usage:
-            dsnames: [array_STORAGE_POOLS_CAPACITY_USAGE]
-            eventClass: /Status
-            maxval: "80"
-
-        graphs:
-          Capacity Usage:
-            units: "%"
-            miny: 0
-            maxy: 100
-            graphpoints:
-              System:
-                dpName: array_SYSTEM_CAPACITY_USAGE
-                format: "%5.0lf%s"
-              Storage Pools:
-                dpName: array_STORAGE_POOLS_CAPACITY_USAGE
-                format: "%5.0lf%s"
 
       OceanStorEnclosure:
-        description: "OceanStor enclosure monitoring."
         targetPythonClass: ZenPacks.community.OceanStor.OceanStorEnclosure
-        datasources:
-          enclosure:
-            type: Python
-            plugin_classname: ZenPacks.community.OceanStor.dsplugins.Enclosure
-            datapoints:
-              TEMPERATURE: {}
-
-        thresholds:
-          temperature:
-            dsnames: [enclosure_TEMPERATURE]
-            eventClass: /Status
-            maxval: "48"
 
       OceanStorController:
-        description: "OceanStor controller monitoring."
         targetPythonClass: ZenPacks.community.OceanStor.OceanStorController
-        datasources:
-          controller:
-            type: Python
-            plugin_classname: ZenPacks.community.OceanStor.dsplugins.Controller
-            datapoints:
-              BLOCK_BANDWIDTH: {}
-              TOTAL_IOPS: {}
-              CPUUSAGE: {}
-              MEMORYUSAGE: {}
-
-        thresholds:
-          cpu_usage:
-            dsnames: [controller_CPUUSAGE]
-            eventClass: /Status
-            maxval: "90"
-          memory_usage:
-            dsnames: [controller_MEMORYUSAGE]
-            eventClass: /Status
-            maxval: "90"
-
-        graphs:
-          Bandwidth:
-            units: MB/s
-            miny: 0
-            graphpoints:
-              Block:
-                dpName: controller_BLOCK_BANDWIDTH
-                format: "%7.0lf%s"
-          IOPS:
-            units: IO/s
-            miny: 0
-            graphpoints:
-              IOPS:
-                dpName: controller_TOTAL_IOPS
-                format: "%7.0lf%s"
-          Usage:
-            units: "%"
-            miny: 0
-            maxy: 100
-            graphpoints:
-              CPU:
-                dpName: controller_CPUUSAGE
-                format: "%5.0lf%s"
-              Memory:
-                dpName: controller_MEMORYUSAGE
-                format: "%5.0lf%s"
 
       OceanStorStoragePool:
-        description: "OceanStor storage pool monitoring."
         targetPythonClass: ZenPacks.community.OceanStor.OceanStorStoragePool
-        datasources:
-          storagepool:
-            type: Python
-            plugin_classname: ZenPacks.community.OceanStor.dsplugins.StoragePool
-            datapoints:
-              BLOCK_BANDWIDTH: {}
-              TOTAL_IOPS: {}
-              READ_BANDWIDTH: {}
-              READ_IOPS: {}
-              WRITE_BANDWIDTH: {}
-              WRITE_IOPS: {}
-              AVG_IO_RESPONSE_TIME: {}
-              CAPACITY_USAGE: {}
-
-        thresholds:
-          capacity_usage:
-            dsnames: [storagepool_CAPACITY_USAGE]
-            eventClass: /Status
-            maxval: "80"
-
-        graphs:
-          Bandwidth:
-            units: MB/s
-            miny: 0
-            graphpoints:
-              Total:
-                dpName: storagepool_BLOCK_BANDWIDTH
-                format: "%7.0lf%s"
-              Read:
-                dpName: storagepool_READ_BANDWIDTH
-                format: "%7.0lf%s"
-              Write:
-                dpName: storagepool_WRITE_BANDWIDTH
-                format: "%7.0lf%s"
-          IOPS:
-            units: IO/s
-            miny: 0
-            graphpoints:
-              Total:
-                dpName: storagepool_TOTAL_IOPS
-                format: "%7.0lf%s"
-              Read:
-                dpName: storagepool_READ_IOPS
-                format: "%7.0lf%s"
-              Write:
-                dpName: storagepool_WRITE_IOPS
-                format: "%7.0lf%s"
-          Response Time:
-            units: us
-            miny: 0
-            graphpoints:
-              Avg. IO:
-                dpName: storagepool_AVG_IO_RESPONSE_TIME
-                format: "%7.0lf%s"
-          Usage:
-            units: "%"
-            miny: 0
-            maxy: 100
-            graphpoints:
-              Used Capacity:
-                dpName: storagepool_CAPACITY_USAGE
-                format: "%5.0lf%s"
 
       OceanStorLUN:
-        description: "OceanStor LUN monitoring."
         targetPythonClass: ZenPacks.community.OceanStor.OceanStorLUN
-        datasources:
-          lun:
-            type: Python
-            plugin_classname: ZenPacks.community.OceanStor.dsplugins.LUN
-            cycletime: "1800"
-            datapoints:
-              BLOCK_BANDWIDTH: {}
-              TOTAL_IOPS: {}
-              READ_BANDWIDTH: {}
-              READ_IOPS: {}
-              WRITE_BANDWIDTH: {}
-              WRITE_IOPS: {}
-
-        graphs:
-          Bandwidth:
-            units: MB/s
-            miny: 0
-            graphpoints:
-              Total:
-                dpName: lun_BLOCK_BANDWIDTH
-                format: "%7.0lf%s"
-              Read:
-                dpName: lun_READ_BANDWIDTH
-                format: "%7.0lf%s"
-              Write:
-                dpName: lun_WRITE_BANDWIDTH
-                format: "%7.0lf%s"
-          IOPS:
-            units: IO/s
-            miny: 0
-            graphpoints:
-              Total:
-                dpName: lun_TOTAL_IOPS
-                format: "%7.0lf%s"
-              Read:
-                dpName: lun_READ_IOPS
-                format: "%7.0lf%s"
-              Write:
-                dpName: lun_WRITE_IOPS
-                format: "%7.0lf%s"
 
       OceanStorFileSystem:
-        description: "OceanStor FileSystem monitoring."
         targetPythonClass: ZenPacks.community.OceanStor.OceanStorFileSystem
-        datasources:
-          filesystem:
-            type: Python
-            plugin_classname: ZenPacks.community.OceanStor.dsplugins.FileSystem
-            cycletime: "1800"
-            datapoints:
-              OPS: {}
-              READ_OPS: {}
-              WRITE_OPS: {}
-              AVG_READ_OPS_RESPONSE_TIME: {}
-              AVG_WRITE_OPS_RESPONSE_TIME: {}
-              INODE_USED_COUNT: {}
 
-        graphs:
-          OPS:
-            units: OP/s
-            miny: 0
-            graphpoints:
-              Total:
-                dpName: filesystem_OPS
-                format: "%7.0lf%s"
-              Read:
-                dpName: filesystem_READ_OPS
-                format: "%7.0lf%s"
-              Write:
-                dpName: filesystem_WRITE_OPS
-                format: "%7.0lf%s"
-          Response Time:
-            units: us
-            miny: 0
-            graphpoints:
-              Read:
-                dpName: filesystem_AVG_READ_OPS_RESPONSE_TIME
-                format: "%7.0lf%s"
-              Write:
-                dpName: filesystem_AVG_WRITE_OPS_RESPONSE_TIME
-                format: "%7.0lf%s"
-          Used inode Count:
-            units: Number
-            miny: 0
-            graphpoints:
-              Used inode Count:
-                dpName: filesystem_INODE_USED_COUNT
-                format: "%7.0lf%s"
+      OceanStorBBU:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorBBU
+
+      OceanStorDiskDomain:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorDiskDomain
+
+      OceanStorPower:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorPower
+
+      OceanStorFan:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorFan
+
+      OceanStorDisk:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorDisk
+
+      OceanStorEthPort:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorEthPort
+
+      OceanStorFCPort:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorFCPort
+
+      OceanStorFCoEPort:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorFCoEPort
+
+      OceanStorBondPort:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorBondPort
+
+      OceanStorVLAN:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorVLAN
+
+      OceanStorLIF:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorLIF
+
+      OceanStorHost:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorHost
+
+      OceanStorISCSIInitiator:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorISCSIInitiator
+
+      OceanStorFCInitiator:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorFCInitiator
+
+      OceanStorNFSShare:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorNFSShare
+
+      OceanStorCIFSShare:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorCIFSShare
+
+      OceanStorSnapshot:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorSnapshot
+
+      OceanStorFSSnapshot:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorFSSnapshot
+
+      OceanStorQuotaTree:
+        targetPythonClass: ZenPacks.community.OceanStor.OceanStorQuotaTree
